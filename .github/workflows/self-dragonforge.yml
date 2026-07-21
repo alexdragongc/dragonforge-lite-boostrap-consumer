@@ -1,0 +1,33 @@
+name: DragonForge
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  df:
+    concurrency:
+      group: df-command-${{ github.event.issue.number }}
+      cancel-in-progress: false
+
+    if: |
+      github.event_name == 'issue_comment' &&
+        startsWith(github.event.comment.body, '@df')
+    uses: alexdragongc/dragonforge-lite-boostrap/.github/workflows/df-router.yml@main
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      statuses: write
+    with:
+      dragonforge_reference: main
+      comment_body: ${{ github.event.comment.body }}
+      comment_author: ${{ github.event.comment.user.login }}
+      issue_number: ${{ github.event.issue.number }}
+      is_pr: ${{ github.event.issue.pull_request && 'true' || 'false' }}
+      triggering_comment_id: ${{ github.event.comment.id }}
+    secrets:
+      dragonforge_read_token: ${{ secrets.DRAGONFORGE_READ_TOKEN }}
+      # Reminder: claude API key and oauth token are mutually exclusive
+      claude_code_api_key: ${{ secrets.CLAUDE_CODE_ANTHROPIC_API_KEY }}
+      claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
