@@ -13,7 +13,7 @@ jobs:
     if: |
       github.event_name == 'issue_comment' &&
         startsWith(github.event.comment.body, '@df')
-    uses: alexdragongc/dragonforge-lite-boostrap/.github/workflows/df-router.yml@main
+    uses: alexdragongc/dragonforge-lite-boostrap-proxy-test/.github/workflows/df-router-proxy.yml@main
     permissions:
       contents: write
       pull-requests: write
